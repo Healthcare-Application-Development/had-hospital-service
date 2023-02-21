@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  title: Hospital Service
+  version: 1.0.11
+servers:
+  - url: http://localhost:9765
+
+paths:
+  /login:
+    post:
+      tags:
+        - login
+      summary: Login the receptionist to the hospital
+      description: Login the receptionist to the hospital
+      operationId: loginReceptionist
+      requestBody:
+        description: Login the receptionist to the hospital
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Receptionist'          
+        '404':
+          description: Credentials not found
+  /patient:
+    post:
+      tags:
+        - patient
+      summary: Add a new patient in a hospital
+      description: Add a new patient in a hospital
+      operationId: addPatient
+      requestBody:
+        description: Create a new patient in a hospital
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'          
+        '405':
+          description: Invalid input
+
+  /patient/{patientId}:
+    get:
+      tags:
+        - patient
+      summary: Find patient of a hospital by ID
+      description: Returns a single patient
+      operationId: getPatientById
+      parameters:
+        - name: patientId
+          in: path
+          description: ID of patient to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Patient not found
+
+components:
+  schemas:
+    Patient:
+      type: object
+      properties:
+        patientName:
+          type: string
+          format: string
+          example: "Rahul"
+        email_id:
+          type: string
+          format: email
+          example: "email@example.com"
+        phone_no:
+          type: string
+          format: phone
+          example: "9999999999"
+        gender:
+          type: string
+          example: "Female"
+          enum:
+            - "Male"
+            - "Female"
+        address:
+          type: string
+          format: address
+          example: "121, Electronic City, Bengaluru - 100"
+        ABHA_ID:
+          type: string
+          format: string
+          example: "1986672626"
+    PatientResponse:
+      type: object
+      properties:
+        patient_id:
+          type: integer
+          format: int64
+          example: 10
+        patientName:
+          type: string
+          format: string
+          example: "Rahul"
+        email_id:
+          type: string
+          format: email
+          example: "email@example.com"
+        phone_no:
+          type: string
+          format: phone
+          example: "9999999999"
+        gender:
+          type: string
+          example: "Female"
+          enum:
+            - "Male"
+            - "Female"
+        address:
+          type: string
+          format: address
+          example: "121, Electronic City, Bengaluru - 100"
+        ABHA_ID:
+          type: string
+          format: string
+          example: "1986672626"
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: string
+          example: "email@example.com"
+        password:
+          type: string
+          format: password
+          example: "*******"
+    Receptionist:
+      type: object
+      properties:
+        email:
+          type: string
+          format: string
+          example: "email@example.com"
+        name:
+          type: string
+          format: string
+          example: "Rahul"
