@@ -101,6 +101,7 @@ components:
           example: "9999999999"
         gender:
           type: string
+          format: gender
           example: "Female"
           enum:
             - "Male"
@@ -135,6 +136,7 @@ components:
         gender:
           type: string
           example: "Female"
+          format: gender
           enum:
             - "Male"
             - "Female"
