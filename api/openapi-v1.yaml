@@ -178,7 +178,7 @@ paths:
       parameters:
         - name: patientId
           in: path
-          description: ID of patient to return
+          description: ID of patient
           required: true
           schema:
             type: integer
@@ -190,6 +190,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PatientResponse'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Patient not found
+  /records/{aba_id}:
+    get:
+      tags:
+        - health records
+      summary: Find records of a patient by ID
+      description: Returns an array of health records of the patient
+      operationId: getRecordsById
+      parameters:
+        - name: aba_id
+          in: path
+          description: ABA ID of patient
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthRecords'          
         '400':
           description: Invalid ID supplied
         '404':
@@ -403,3 +429,32 @@ components:
           type: string
           format: string
           example: "Rahul"
+    HealthRecords:
+      type: object
+      properties:
+        patient_id:
+          type: string
+          example: 10
+        health_records:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+                example: "Blood Report"
+              doctor_id:
+                type: string
+                example: "23"
+              date:
+                type: string
+                example: "22-08-2018"
+              data: 
+                type: string
+                example: "Blood Group: B+"
+              patient_id:
+                type: string
+                example: "10"
+              npi_id:
+                type: string
+                example: "123"
