@@ -6,6 +6,119 @@ servers:
   - url: http://localhost:9765
 
 paths:
+  /doctor:
+    post:
+      tags:
+        - doctor
+      summary: Register doctor to the hospital
+      description: Register doctor to the hospital
+      operationId: addDoctor
+      requestBody:
+        description: Create a new doctor in a hospital
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Doctor'
+
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorResponse'          
+        '405':
+          description: Invalid input  
+          
+          
+  /receptionist:
+    post:
+      tags:
+        - receptionist
+      summary: Register receptionist to the hospital
+      description: Register receptionist to the hospital
+      operationId: addreceptionist
+      requestBody:
+        description: Create a new receptionist in a hospital
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Receptionistregister'
+
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceptionistResponse'          
+        '405':
+          description: Invalid input           
+          
+          
+  /doctor/{doctorId}:
+    get:
+      tags:
+        - doctor
+      summary: Find doctor of a hospital by ID basically umrn
+      description: Returns a single doctor
+      operationId: getdoctorById
+      parameters:
+        - name: doctorId
+          in: path
+          description: ID of doctor to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorResponse'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Doctor not found          
+          
+          
+  /receptionist/{receptionistId}:
+    get:
+      tags:
+        - receptionist
+      summary: Find receptionist of a hospital by ID 
+      description: Returns a receptionist doctor
+      operationId: getreceptionistById
+      parameters:
+        - name: receptionistId
+          in: path
+          description: ID of receptionist to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceptionistResponse'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Receptionist not found          
+                   
+ 
+ 
+ 
+ 
+
+    
   /login:
     post:
       tags:
@@ -84,6 +197,126 @@ paths:
 
 components:
   schemas:
+    Doctor:
+      type: object
+      properties:
+        doctorName:
+          type: string
+          format: string
+          example: "Rahul"
+        email_id:
+          type: string
+          format: email
+          example: "email@example.com"
+        phone_no:
+          type: string
+          format: phone
+          example: "9999999999"
+        gender:
+          type: string
+          format: gender
+          example: "Female"
+          enum:
+            - "Male"
+            - "Female"
+        address:
+          type: string
+          format: address
+          example: "121, Electronic City, Bengaluru - 100"
+        UMRN_ID:
+          type: string
+          format: string
+          example: "1986672626"
+    DoctorResponse:
+      type: object
+      properties:
+        doctorName:
+          type: string
+          format: string
+          example: "Rahul"
+        email_id:
+          type: string
+          format: email
+          example: "email@example.com"
+        phone_no:
+          type: string
+          format: phone
+          example: "9999999999"
+        gender:
+          type: string
+          example: "Female"
+          format: gender
+          enum:
+            - "Male"
+            - "Female"
+        address:
+          type: string
+          format: address
+          example: "121, Electronic City, Bengaluru - 100"
+        UMRN_ID:
+          type: string
+          format: string
+          example: "1986672626" 
+          
+
+
+    Receptionist:
+      type: object
+      properties:
+        receptionistName:
+          type: string
+          format: string
+          example: "Rahul"
+        email_id:
+          type: string
+          format: email
+          example: "email@example.com"
+        phone_no:
+          type: string
+          format: phone
+          example: "9999999999"
+        gender:
+          type: string
+          format: gender
+          example: "Female"
+          enum:
+            - "Male"
+            - "Female"
+        address:
+          type: string
+          format: address
+          example: "121, Electronic City, Bengaluru - 100"
+        
+    ReceptionistResponse:
+      type: object
+      properties:
+        receptionistName:
+          type: string
+          format: string
+          example: "Rahul"
+        email_id:
+          type: string
+          format: email
+          example: "email@example.com"
+        phone_no:
+          type: string
+          format: phone
+          example: "9999999999"
+        gender:
+          type: string
+          example: "Female"
+          format: gender
+          enum:
+            - "Male"
+            - "Female"
+        address:
+          type: string
+          format: address
+          example: "121, Electronic City, Bengaluru - 100"
+        Receptionist_ID:
+          type: string
+          format: string
+          example: "1986672626" 
     Patient:
       type: object
       properties:
@@ -159,7 +392,7 @@ components:
           type: string
           format: password
           example: "*******"
-    Receptionist:
+    Receptionistregister:
       type: object
       properties:
         email:
