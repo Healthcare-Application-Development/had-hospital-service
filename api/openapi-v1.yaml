@@ -123,11 +123,11 @@ paths:
     post:
       tags:
         - login
-      summary: Login the receptionist to the hospital
-      description: Login the receptionist to the hospital
+      summary: Login the receptionist/admin to the hospital
+      description: Login the receptionist/admin to the hospital
       operationId: loginReceptionist
       requestBody:
-        description: Login the receptionist to the hospital
+        description: Login the receptionist/admin to the hospital
         content:
           application/json:
             schema:
