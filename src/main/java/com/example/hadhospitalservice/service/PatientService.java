@@ -6,6 +6,8 @@ import com.example.hadhospitalservice.interfaces.PatientInterface;
 import com.example.hadhospitalservice.repository.PatientRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,42 +24,46 @@ public class PatientService implements PatientInterface {
     }
 
     @Override
-    public Response addPatient(Patient patient) {
+    public ResponseEntity<Response> addPatient(Patient patient) {
         String hashedPassword = BCrypt.hashpw(patient.getPassword(), hash);
         patient.setPassword(hashedPassword);
-        Patient savedPatient = patientRepository.save(patient);
-        savedPatient.setPassword(null);
-        return new Response(savedPatient, 200);
+        try {
+            Patient savedPatient = patientRepository.save(patient);
+            savedPatient.setPassword(null);
+            return new ResponseEntity<>(new Response(savedPatient, 200), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new Response(e.getMessage(), 400), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
-    public Response getAllPatients() {
+    public ResponseEntity<Response> getAllPatients() {
         List<Patient> patientList = patientRepository.findAll();
         for (int i = 0; i < patientList.size(); i++) {
             patientList.get(i).setPassword(null);
         }
-        return new Response(patientList, 200);
+        return new ResponseEntity<>(new Response(patientList, 200), HttpStatus.OK);
     }
 
     @Override
-    public Response login(Patient patient) {
+    public ResponseEntity<Response> login(Patient patient) {
         String hashedPassword = BCrypt.hashpw(patient.getPassword(), hash);
 
         Patient retrievedPatient = patientRepository.findByAbhaIDAndPassword(patient.getAbhaID(), hashedPassword);
         if (retrievedPatient == null) {
-            return new Response(null, 400);
+            return new ResponseEntity<>(new Response(null, 404), HttpStatus.NOT_FOUND);
         }
         retrievedPatient.setPassword(null);
-        return new Response(retrievedPatient, 200);
+        return new ResponseEntity<>(new Response(retrievedPatient, 200), HttpStatus.OK);
     }
 
     @Override
-    public Response getPatientByABHAID(String abhaID) {
+    public ResponseEntity<Response> getPatientByABHAID(String abhaID) {
         Patient patient = patientRepository.findByAbhaID(abhaID);
         if (patient == null) {
-            return new Response(null, 400);
+            return new ResponseEntity<>(new Response(null, 404), HttpStatus.NOT_FOUND);
         }
         patient.setPassword(null);
-        return new Response(patient, 200);
+        return new ResponseEntity<>(new Response(patient, 200), HttpStatus.OK);
     }
 }

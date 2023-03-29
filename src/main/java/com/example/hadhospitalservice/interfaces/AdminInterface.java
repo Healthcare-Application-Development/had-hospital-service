@@ -2,8 +2,9 @@ package com.example.hadhospitalservice.interfaces;
 
 import com.example.hadhospitalservice.bean.Admin;
 import com.example.hadhospitalservice.bean.Response;
+import org.springframework.http.ResponseEntity;
 
 public interface AdminInterface {
-    Response addAdmin(Admin admin);
-    Response login(Admin admin);
+    ResponseEntity<Response> addAdmin(Admin admin);
+    ResponseEntity<Response> login(Admin admin);
 }
