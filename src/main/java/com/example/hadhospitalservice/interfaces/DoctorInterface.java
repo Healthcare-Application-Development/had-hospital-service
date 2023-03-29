@@ -3,10 +3,11 @@ package com.example.hadhospitalservice.interfaces;
 
 import com.example.hadhospitalservice.bean.Doctor;
 import com.example.hadhospitalservice.bean.Response;
+import org.springframework.http.ResponseEntity;
 
 public interface DoctorInterface {
-    Response addDoctor(Doctor doctor);
-    Response getAllDoctors();
-    Response login(Doctor doctor);
-    Response getDoctorByNPCIID(String npciID);
+    ResponseEntity<Response> addDoctor(Doctor doctor);
+    ResponseEntity<Response> getAllDoctors();
+    ResponseEntity<Response> login(Doctor doctor);
+    ResponseEntity<Response> getDoctorByNPCIID(String npciID);
 }

@@ -3,6 +3,7 @@ package com.example.hadhospitalservice.controller;
 import com.example.hadhospitalservice.bean.Admin;
 import com.example.hadhospitalservice.bean.Response;
 import com.example.hadhospitalservice.interfaces.AdminInterface;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,12 +17,12 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public Response addAdmin(@RequestBody Admin admin) {
+    public ResponseEntity<Response> addAdmin(@RequestBody Admin admin) {
         return adminInterface.addAdmin(admin);
     }
 
     @PostMapping("/login")
-    public Response login(@RequestBody Admin admin) {
+    public ResponseEntity<Response> login(@RequestBody Admin admin) {
         return adminInterface.login(admin);
     }
 }
