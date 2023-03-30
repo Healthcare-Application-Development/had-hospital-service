@@ -16,7 +16,7 @@ had-hospital-service contains the Docker Compose file
 To generate instances, we do the following:
 
 In Linux:
-___CONTAINER_NAME=hospital1 docker-compose -p hospital1 up__
+__CONTAINER_NAME=hospital1 docker-compose -p hospital1 up__
 
 For more instances, change the CONTAINER_NAME as well as the value of the -p to hospital2/hospital3 etc
 
