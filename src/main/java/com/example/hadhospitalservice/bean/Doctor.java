@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Doctor extends Person {
-    @Column(unique = true, nullable = false)
-    private String email;
     @Column(nullable = false, unique = true)
     String npciID;
 
@@ -27,11 +25,4 @@ public class Doctor extends Person {
         this.npciID = npciID;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

@@ -25,11 +25,8 @@ public class DoctorService implements DoctorInterface {
 
     @Override
     public ResponseEntity<Response> addDoctor(Doctor doctor) {
-        String hashedPassword = BCrypt.hashpw(doctor.getLogin().getPassword(),hash);
-        doctor.getLogin().setPassword(hashedPassword);
         try {
             Doctor savedDoctor = doctorRepository.save(doctor);
-            savedDoctor.getLogin().setPassword(null);
             return new ResponseEntity<>(new Response(savedDoctor, 200), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new Response(e.getMessage(), 400), HttpStatus.BAD_REQUEST);

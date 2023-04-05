@@ -3,13 +3,10 @@ package com.example.hadhospitalservice.service;
 import com.example.hadhospitalservice.bean.Login;
 import com.example.hadhospitalservice.bean.Receptionist;
 import com.example.hadhospitalservice.bean.Response;
-import com.example.hadhospitalservice.bean.Role;
 import com.example.hadhospitalservice.interfaces.ReceptionistInterface;
 import com.example.hadhospitalservice.repository.LoginRepository;
 import com.example.hadhospitalservice.repository.ReceptionistRepository;
-import com.example.hadhospitalservice.repository.RoleRepository;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +21,11 @@ public class ReceptionistService implements ReceptionistInterface {
     @Value("${bcrypt.hash}")
     private String hash;
     final ReceptionistRepository receptionistRepository;
-    final RoleRepository roleRepository;
 
-    public ReceptionistService(ReceptionistRepository receptionistRepository, LoginRepository loginRepository, RoleRepository roleRepository) {
+
+    public ReceptionistService(ReceptionistRepository receptionistRepository, LoginRepository loginRepository) {
         this.receptionistRepository = receptionistRepository;
         this.loginRepository = loginRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -67,8 +63,8 @@ public class ReceptionistService implements ReceptionistInterface {
         Login login = receptionist.getLogin();
         login.setPassword(hashedPassword);
         Login accessedLogin = loginRepository.findByUsernameAndPassword(receptionist.getEmail(), hashedPassword);
-        Role role = roleRepository.findByName("RECEPTIONIST");
-        if (!"RECEPTIONIST".equals(receptionist.getLogin().getRole().getName())) {
+
+        if (!"RECEPTIONIST".equals(receptionist.getLogin().getRole())) {
             return new ResponseEntity<>(new Response(null, 404), HttpStatus.NOT_FOUND);
         }
         if (accessedLogin == null) {
