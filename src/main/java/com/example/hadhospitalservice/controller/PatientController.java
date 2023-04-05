@@ -26,11 +26,6 @@ public class PatientController {
         return patientInterface.getAllPatients();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody Patient patient) {
-        return patientInterface.login(patient);
-    }
-
     @PostMapping("/getByEmail/{abhaID}")
     public ResponseEntity<Response> getByAbhaID(@PathVariable("abhaID") String abhaID) {
         return patientInterface.getPatientByABHAID(abhaID);

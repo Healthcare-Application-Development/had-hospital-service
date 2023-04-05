@@ -25,11 +25,11 @@ public class PatientService implements PatientInterface {
 
     @Override
     public ResponseEntity<Response> addPatient(Patient patient) {
-        String hashedPassword = BCrypt.hashpw(patient.getPassword(), hash);
-        patient.setPassword(hashedPassword);
+        String hashedPassword = BCrypt.hashpw(patient.getLogin().getPassword(), hash);
+        patient.getLogin().setPassword(hashedPassword);
         try {
             Patient savedPatient = patientRepository.save(patient);
-            savedPatient.setPassword(null);
+            savedPatient.getLogin().setPassword(null);
             return new ResponseEntity<>(new Response(savedPatient, 200), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new Response(e.getMessage(), 400), HttpStatus.BAD_REQUEST);
@@ -40,22 +40,11 @@ public class PatientService implements PatientInterface {
     public ResponseEntity<Response> getAllPatients() {
         List<Patient> patientList = patientRepository.findAll();
         for (int i = 0; i < patientList.size(); i++) {
-            patientList.get(i).setPassword(null);
+            patientList.get(i).getLogin().setPassword(null);
         }
         return new ResponseEntity<>(new Response(patientList, 200), HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<Response> login(Patient patient) {
-        String hashedPassword = BCrypt.hashpw(patient.getPassword(), hash);
-
-        Patient retrievedPatient = patientRepository.findByAbhaIDAndPassword(patient.getAbhaID(), hashedPassword);
-        if (retrievedPatient == null) {
-            return new ResponseEntity<>(new Response(null, 404), HttpStatus.NOT_FOUND);
-        }
-        retrievedPatient.setPassword(null);
-        return new ResponseEntity<>(new Response(retrievedPatient, 200), HttpStatus.OK);
-    }
 
     @Override
     public ResponseEntity<Response> getPatientByABHAID(String abhaID) {
@@ -63,7 +52,7 @@ public class PatientService implements PatientInterface {
         if (patient == null) {
             return new ResponseEntity<>(new Response(null, 404), HttpStatus.NOT_FOUND);
         }
-        patient.setPassword(null);
+        patient.getLogin().setPassword(null);
         return new ResponseEntity<>(new Response(patient, 200), HttpStatus.OK);
     }
 }
