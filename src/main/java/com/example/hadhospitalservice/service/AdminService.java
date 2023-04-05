@@ -4,7 +4,6 @@ import com.example.hadhospitalservice.bean.*;
 import com.example.hadhospitalservice.interfaces.AdminInterface;
 import com.example.hadhospitalservice.repository.AdminRepository;
 import com.example.hadhospitalservice.repository.LoginRepository;
-import com.example.hadhospitalservice.repository.RoleRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,11 +16,10 @@ public class AdminService implements AdminInterface {
     private String hash;
     final AdminRepository adminRepository;
     final LoginRepository loginRepository;
-    final RoleRepository roleRepository;
-    public AdminService(AdminRepository adminRepository, LoginRepository loginRepository, RoleRepository roleRepository) {
+
+    public AdminService(AdminRepository adminRepository, LoginRepository loginRepository) {
         this.adminRepository = adminRepository;
         this.loginRepository = loginRepository;
-        this.roleRepository = roleRepository;
     }
     @Override
     public ResponseEntity<Response> addAdmin(Admin admin) {
@@ -49,7 +47,7 @@ public class AdminService implements AdminInterface {
         Login login = admin.getLogin();
         login.setPassword(hashedPassword);
         Login accessedLogin = loginRepository.findByUsernameAndPassword(admin.getEmail(), hashedPassword);
-        if (!"ADMIN".equals(admin.getLogin().getRole().getName())) {
+        if (!"ADMIN".equals(admin.getLogin().getRole())) {
             return new ResponseEntity<>(new Response(null, 404), HttpStatus.NOT_FOUND);
         }
         if (accessedLogin == null) {

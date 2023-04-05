@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Entity
 public class Login implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, unique = true)
@@ -15,26 +15,23 @@ public class Login implements Serializable {
 
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
-    private Role role;
-
+    private String role;
     public Login() {
 
     }
 
-    public Login(Integer id, String username, String password, Role role) {
+    public Login(Integer id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
