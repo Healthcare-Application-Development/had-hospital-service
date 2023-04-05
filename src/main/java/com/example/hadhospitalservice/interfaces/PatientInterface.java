@@ -7,6 +7,5 @@ import org.springframework.http.ResponseEntity;
 public interface PatientInterface {
     ResponseEntity<Response> addPatient(Patient patient);
     ResponseEntity<Response> getAllPatients();
-    ResponseEntity<Response> login(Patient patient);
     ResponseEntity<Response> getPatientByABHAID(String abhaID);
 }

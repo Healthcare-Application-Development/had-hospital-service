@@ -27,10 +27,6 @@ public class DoctorController {
         return doctorInterface.getAllDoctors();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody Doctor doctor) {
-        return doctorInterface.login(doctor);
-    }
 
     @PostMapping("/getByEmail/{npciID}")
     public ResponseEntity<Response> getByNpciID(@PathVariable("abhaID") String npciID) {
