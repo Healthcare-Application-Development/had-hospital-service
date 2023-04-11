@@ -117,6 +117,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/receptionist/**").hasAnyAuthority("ROLE_RECEPTIONIST", "ROLE_ADMIN")
                 .requestMatchers("/doctor/**").hasAnyAuthority("ROLE_ADMIN")
                 .requestMatchers("/patient/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RECEPTIONIST")
+                .requestMatchers("/patientHealthRecord/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RECEPTIONIST")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
