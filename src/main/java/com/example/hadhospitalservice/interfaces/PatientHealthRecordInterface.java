@@ -5,10 +5,12 @@ import com.example.hadhospitalservice.bean.PatientHealthRecord;
 import com.example.hadhospitalservice.bean.Response;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface PatientHealthRecordInterface {
 
+    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(Integer abhaId, String recordType);
     ResponseEntity<PatientHealthRecord> addPatientHealthRecord(PatientHealthRecord patientHealthRecord);
-    ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaID(Integer abhaID);
-
+    ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaId(Integer abhaId);
     Response getAllPatientHealthRecord();
 }

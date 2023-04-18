@@ -2,45 +2,66 @@ package com.example.hadhospitalservice.bean;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
 public class PatientHealthRecord {
-    public PatientHealthRecord(Integer healthRecordID, String abhaID, String recordCategory) {
-        this.healthRecordID = healthRecordID;
-        this.abhaID = abhaID;
-        this.recordCategory = recordCategory;
+    public PatientHealthRecord(Integer abhaId, String recordType, Date timestamp, String hospitalName) {
+        this.abhaId = abhaId;
+        this.recordType = recordType;
+        this.timestamp=timestamp;
+        this.hospitalName=hospitalName;
     }
-
     public PatientHealthRecord(){}
-
-    public String getAbhaID() {
-        return abhaID;
-    }
-
-    public void setAbhaID(String abhaID) {
-        this.abhaID = abhaID;
-    }
-
-    public String getRecordCategory() {
-        return recordCategory;
-    }
-
-    public void setRecordCategory(String recordCategory) {
-        this.recordCategory = recordCategory;
-    }
-
-    public Integer getHealthRecordID() {
-        return healthRecordID;
-    }
-
-    public void setHealthRecordID(Integer healthRecordID) {
-        this.healthRecordID = healthRecordID;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer healthRecordID;
+    private Integer id;
+
     @Column(nullable = false)
-    private String abhaID;
+    private Integer abhaId;
+
     @Column(nullable = false)
-    private String recordCategory;
+    String recordType;
+
+    @Column(nullable = false)
+    Date timestamp;
+
+    @Column(nullable = false)
+    String hospitalName;
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+
+    public Integer getAbhaId() {
+        return abhaId;
+    }
+
+    public void setAbhaId(Integer abhaId) {
+        this.abhaId = abhaId;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
+    }
+
+
 }
