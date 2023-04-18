@@ -1,12 +1,12 @@
 package com.example.hadhospitalservice.controller;
 
 import com.example.hadhospitalservice.bean.PatientHealthRecord;
-import com.example.hadhospitalservice.bean.Receptionist;
 import com.example.hadhospitalservice.bean.Response;
 import com.example.hadhospitalservice.interfaces.PatientHealthRecordInterface;
-import com.example.hadhospitalservice.interfaces.PatientInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -31,10 +31,15 @@ public class PatientHealthRecordController {
     }
 
 
-    @PostMapping("/getByAbhaID/{Id}")
-    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaID(@PathVariable("Id") Integer abhaID) {
-        return patientHealthRecordInterface.getPatientHealthRecordByAbhaID(abhaID);
+    @PostMapping("/getPatientHealthRecordByAbhaId/{Id}")
+    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaID(@PathVariable("Id") Integer abhaId) {
+        return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(abhaId);
     }
 
+
+    @PostMapping("/getPatientHealthRecord/")
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(@RequestBody PatientHealthRecord patientHealthRecord)  {
+        return patientHealthRecordInterface.getPatientHealthRecordByAbhaIdAndRecordType(patientHealthRecord.getAbhaId(), patientHealthRecord.getRecordType());
+    }
 
 }
