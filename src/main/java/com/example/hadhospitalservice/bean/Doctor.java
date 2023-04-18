@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Doctor extends Person {
-    @Column(unique = true, nullable = false)
-    private String email;
     @Column(nullable = false, unique = true)
     String npciID;
 
@@ -14,9 +12,8 @@ public class Doctor extends Person {
         super();
     }
 
-    public Doctor(Integer id, String name, String phoneNo, String address, Character gender, String password, String npciID, String email) {
-        super(id, name, phoneNo, address, gender, password);
-        this.email = email;
+    public Doctor(Integer id, String name, String phoneNo, String address, Character gender, String npciID, String email, Login login) {
+        super(id, name, phoneNo, address, gender, email, login);
         this.npciID = npciID;
     }
 
@@ -28,11 +25,4 @@ public class Doctor extends Person {
         this.npciID = npciID;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
