@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/patientHealthRecord")
 public class PatientHealthRecordController {
-
     final PatientHealthRecordInterface patientHealthRecordInterface;
 
     public PatientHealthRecordController(PatientHealthRecordInterface patientHealthRecordInterface) {
@@ -32,12 +31,12 @@ public class PatientHealthRecordController {
 
 
     @PostMapping("/getPatientHealthRecordByAbhaId/{Id}")
-    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaID(@PathVariable("Id") Integer abhaId) {
+    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaID(@PathVariable("Id") String abhaId) {
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(abhaId);
     }
 
 
-    @PostMapping("/getPatientHealthRecord/")
+    @PostMapping("/getPatientHealthRecord")
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(@RequestBody PatientHealthRecord patientHealthRecord)  {
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaIdAndRecordType(patientHealthRecord.getAbhaId(), patientHealthRecord.getRecordType());
     }

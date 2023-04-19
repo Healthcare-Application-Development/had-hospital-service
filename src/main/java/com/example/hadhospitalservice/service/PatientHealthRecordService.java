@@ -4,6 +4,7 @@ import com.example.hadhospitalservice.bean.Doctor;
 import com.example.hadhospitalservice.bean.Patient;
 import com.example.hadhospitalservice.bean.PatientHealthRecord;
 import com.example.hadhospitalservice.bean.Response;
+import com.example.hadhospitalservice.encryption.AESUtils;
 import com.example.hadhospitalservice.interfaces.PatientHealthRecordInterface;
 import com.example.hadhospitalservice.repository.PatientHealthRecordRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -19,6 +20,8 @@ import java.util.List;
 
 @Service
 public class PatientHealthRecordService implements PatientHealthRecordInterface {
+    @Autowired
+    AESUtils aesUtils;
 
     @Autowired
     private Environment env;
@@ -27,8 +30,7 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
         this.patientHealthRecordRepository = patientHealthRecordRepository;
     }
     @Override
-    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(Integer abhaId, String recordType) {
-
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(String abhaId, String recordType) {
         List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(abhaId, recordType);
         if (patientHealthRecord == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,7 +38,12 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
             for (int i = 0; i < patientHealthRecord.size(); i++) {
                 String hospitalName = env.getProperty("hospitalName");
-                patientHealthRecord.get(i).setHospitalName(hospitalName);
+                try {
+                    patientHealthRecord.get(i).setHospitalName(aesUtils.encrypt(hospitalName));
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
             return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
         }
@@ -44,12 +51,22 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
     @Override
     public ResponseEntity<PatientHealthRecord> addPatientHealthRecord(PatientHealthRecord patientHealthRecord) {
+        String hospitalName = env.getProperty("hospitalName");
+        patientHealthRecord.setHospitalName(hospitalName);
+        try {
+            patientHealthRecord.setAbhaId(aesUtils.encrypt(patientHealthRecord.getAbhaId()));
+            patientHealthRecord.setDescription(aesUtils.encrypt(patientHealthRecord.getDescription()));
+            patientHealthRecord.setRecordType(aesUtils.encrypt(patientHealthRecord.getRecordType()));
+            patientHealthRecord.setHospitalName(aesUtils.encrypt(patientHealthRecord.getHospitalName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         PatientHealthRecord patientRecordInput = patientHealthRecordRepository.save(patientHealthRecord);
         return new ResponseEntity<PatientHealthRecord>(patientRecordInput, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaId(Integer abhaId) {
+    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaId(String abhaId) {
         PatientHealthRecord patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaId(abhaId);
         if (patientHealthRecord == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
