@@ -13,8 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/patientHealthRecord")
 public class PatientHealthRecordController {
-
-//    @Autowired
     final PatientHealthRecordInterface patientHealthRecordInterface;
 
     public PatientHealthRecordController(PatientHealthRecordInterface patientHealthRecordInterface) {
@@ -33,13 +31,13 @@ public class PatientHealthRecordController {
     }
 
 
-    @PostMapping("/getPatientHealthRecordByAbhaId/")
+    @PostMapping("/getPatientHealthRecordByAbhaId")
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaID(@RequestBody PatientHealthRecord patientHealthRecord) {
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(patientHealthRecord.getAbhaId());
     }
 
 
-    @PostMapping("/getPatientHealthRecord/")
+    @PostMapping("/getPatientHealthRecord")
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(@RequestBody PatientHealthRecord patientHealthRecord)  {
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaIdAndRecordType(patientHealthRecord.getAbhaId(), patientHealthRecord.getRecordType());
     }

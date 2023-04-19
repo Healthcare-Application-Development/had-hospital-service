@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface PatientHealthRecordInterface {
 
-    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(Integer abhaId, String recordType);
+    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(String abhaId, String recordType);
     ResponseEntity<PatientHealthRecord> addPatientHealthRecord(PatientHealthRecord patientHealthRecord);
-    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaId(Integer abhaId);
+    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaId(String abhaId);
     Response getAllPatientHealthRecord();
 }
