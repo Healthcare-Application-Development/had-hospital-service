@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface PatientHealthRecordRepository extends JpaRepository<PatientHealthRecord, Integer> {
-    PatientHealthRecord getPatientHealthRecordByAbhaId(String abhaId);
+    List<PatientHealthRecord> getPatientHealthRecordByAbhaId(String abhaId);
     List<PatientHealthRecord> getPatientHealthRecordByAbhaIdAndRecordType(String abhaId, String recordType);
 }
