@@ -3,6 +3,7 @@ package com.example.hadhospitalservice.controller;
 import com.example.hadhospitalservice.bean.PatientHealthRecord;
 import com.example.hadhospitalservice.bean.Response;
 import com.example.hadhospitalservice.interfaces.PatientHealthRecordInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @RequestMapping("/patientHealthRecord")
 public class PatientHealthRecordController {
 
+//    @Autowired
     final PatientHealthRecordInterface patientHealthRecordInterface;
 
     public PatientHealthRecordController(PatientHealthRecordInterface patientHealthRecordInterface) {
@@ -31,9 +33,9 @@ public class PatientHealthRecordController {
     }
 
 
-    @PostMapping("/getPatientHealthRecordByAbhaId/{Id}")
-    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaID(@PathVariable("Id") Integer abhaId) {
-        return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(abhaId);
+    @PostMapping("/getPatientHealthRecordByAbhaId/")
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaID(@RequestBody PatientHealthRecord patientHealthRecord) {
+        return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(patientHealthRecord.getAbhaId());
     }
 
 
