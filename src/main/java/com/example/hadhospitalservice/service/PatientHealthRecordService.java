@@ -22,6 +22,8 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
     @Autowired
     private Environment env;
+
+//    @Autowired
     final PatientHealthRecordRepository patientHealthRecordRepository;
     public PatientHealthRecordService(PatientHealthRecordRepository patientHealthRecordRepository) {
         this.patientHealthRecordRepository = patientHealthRecordRepository;
@@ -49,12 +51,18 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
     }
 
     @Override
-    public ResponseEntity<PatientHealthRecord> getPatientHealthRecordByAbhaId(Integer abhaId) {
-        PatientHealthRecord patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaId(abhaId);
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaId(Integer abhaId) {
+        List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaId(abhaId);
         if (patientHealthRecord == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+
+            for (int i = 0; i < patientHealthRecord.size(); i++) {
+                String hospitalName = env.getProperty("hospitalName");
+                patientHealthRecord.get(i).setHospitalName(hospitalName);
+            }
+            return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
         }
-            return new ResponseEntity<PatientHealthRecord>(patientHealthRecord, HttpStatus.OK);
     }
 
     @Override
