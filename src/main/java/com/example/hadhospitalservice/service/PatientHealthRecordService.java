@@ -76,7 +76,12 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
             for (int i = 0; i < patientHealthRecord.size(); i++) {
                 String hospitalName = env.getProperty("hospitalName");
-                patientHealthRecord.get(i).setHospitalName(hospitalName);
+                try {
+                    patientHealthRecord.get(i).setHospitalName(aesUtils.encrypt(hospitalName));
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
             return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
         }
