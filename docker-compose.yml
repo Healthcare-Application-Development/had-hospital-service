@@ -18,6 +18,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_CLOUD_VAULT_HOST=vault
       - hospitalName=${CONTAINER_NAME}
+      - VAULT_TOKEN=${VAULT_TOKEN}
     depends_on:
       - mysql-container
     restart: on-failure
