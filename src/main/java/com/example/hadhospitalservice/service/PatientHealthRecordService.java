@@ -1,21 +1,16 @@
 package com.example.hadhospitalservice.service;
 
-import com.example.hadhospitalservice.bean.Doctor;
-import com.example.hadhospitalservice.bean.Patient;
-import com.example.hadhospitalservice.bean.PatientHealthRecord;
-import com.example.hadhospitalservice.bean.Response;
+import com.example.hadhospitalservice.bean.*;
 import com.example.hadhospitalservice.interfaces.PatientHealthRecordInterface;
+import com.example.hadhospitalservice.repository.PatientHealthRecordDetailsRepository;
 import com.example.hadhospitalservice.repository.PatientHealthRecordRepository;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PatientHealthRecordService implements PatientHealthRecordInterface {
@@ -25,22 +20,37 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
 //    @Autowired
     final PatientHealthRecordRepository patientHealthRecordRepository;
-    public PatientHealthRecordService(PatientHealthRecordRepository patientHealthRecordRepository) {
+    final PatientHealthRecordDetailsRepository patientHealthRecordDetailsRepository;
+    public PatientHealthRecordService(PatientHealthRecordRepository patientHealthRecordRepository, PatientHealthRecordDetailsRepository patientHealthRecordDetailsRepository) {
         this.patientHealthRecordRepository = patientHealthRecordRepository;
+        this.patientHealthRecordDetailsRepository = patientHealthRecordDetailsRepository;
     }
     @Override
-    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(Integer abhaId, String recordType) {
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(RequestPatientHealthRecord requestPatientHealthRecord) {
 
-        List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(abhaId, recordType);
+        List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(requestPatientHealthRecord.getAbhaId(),requestPatientHealthRecord.getRecordType());
         if (patientHealthRecord == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
+            PatientHealthRecordDetails patientHealthRecordDetails= new PatientHealthRecordDetails();
+            patientHealthRecordDetails.setAbhaId(requestPatientHealthRecord.getAbhaId());
+            patientHealthRecordDetails.setArtifactId(requestPatientHealthRecord.getArtifactId());
+            patientHealthRecordDetails.setConsentId(requestPatientHealthRecord.getConsentId());
+            patientHealthRecordDetails.setRequestTimestamp(new Date());
+            String hospitalName = env.getProperty("hospitalName");
+            patientHealthRecordDetails.setHospitalName(hospitalName);
+            Set<String> setOfRecords = new HashSet<>();
 
             for (int i = 0; i < patientHealthRecord.size(); i++) {
-                String hospitalName = env.getProperty("hospitalName");
                 patientHealthRecord.get(i).setHospitalName(hospitalName);
+                setOfRecords.add(patientHealthRecord.get(i).getRecordType());
             }
+            String setOfRecordsAsString = String.join(",", setOfRecords);
+            patientHealthRecordDetails.setListOfRecordType(setOfRecordsAsString);
+            PatientHealthRecordDetails patientRecordInput = patientHealthRecordDetailsRepository.save(patientHealthRecordDetails);
+
             return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
+
         }
     }
 
@@ -52,6 +62,7 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
     @Override
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaId(Integer abhaId) {
+
         List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaId(abhaId);
         if (patientHealthRecord == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
