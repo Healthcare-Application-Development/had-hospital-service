@@ -1,22 +1,21 @@
 package com.example.hadhospitalservice.service;
 
+import com.example.hadhospitalservice.bean.*;
 import com.example.hadhospitalservice.bean.Doctor;
 import com.example.hadhospitalservice.bean.Patient;
 import com.example.hadhospitalservice.bean.PatientHealthRecord;
 import com.example.hadhospitalservice.bean.Response;
 import com.example.hadhospitalservice.encryption.AESUtils;
 import com.example.hadhospitalservice.interfaces.PatientHealthRecordInterface;
+import com.example.hadhospitalservice.repository.PatientHealthRecordDetailsRepository;
 import com.example.hadhospitalservice.repository.PatientHealthRecordRepository;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PatientHealthRecordService implements PatientHealthRecordInterface {
@@ -28,28 +27,56 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
 
 //    @Autowired
     final PatientHealthRecordRepository patientHealthRecordRepository;
-    public PatientHealthRecordService(PatientHealthRecordRepository patientHealthRecordRepository) {
+    final PatientHealthRecordDetailsRepository patientHealthRecordDetailsRepository;
+    public PatientHealthRecordService(PatientHealthRecordRepository patientHealthRecordRepository, PatientHealthRecordDetailsRepository patientHealthRecordDetailsRepository) {
         this.patientHealthRecordRepository = patientHealthRecordRepository;
+        this.patientHealthRecordDetailsRepository = patientHealthRecordDetailsRepository;
     }
     @Override
-    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(String abhaId, String recordType) {
-        List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(abhaId, recordType);
-        if (patientHealthRecord == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-
-            for (int i = 0; i < patientHealthRecord.size(); i++) {
-                String hospitalName = env.getProperty("hospitalName");
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(RequestPatientHealthRecord requestPatientHealthRecord) {
+            List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(requestPatientHealthRecord.getAbhaId(), requestPatientHealthRecord.getRecordType());
+            if (patientHealthRecord == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                PatientHealthRecordDetails patientHealthRecordDetails = new PatientHealthRecordDetails();
                 try {
-                    patientHealthRecord.get(i).setHospitalName(aesUtils.encrypt(hospitalName));
-                } catch (Exception e) {
+                    patientHealthRecordDetails.setAbhaId(aesUtils.encrypt(requestPatientHealthRecord.getAbhaId()));
+                }
+                catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-            }
-            return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
+                    patientHealthRecordDetails.setArtifactId(requestPatientHealthRecord.getArtifactId());
+                    patientHealthRecordDetails.setConsentId(requestPatientHealthRecord.getConsentId());
+                    patientHealthRecordDetails.setRequestTimestamp(new Date());
+                    String hospitalName = env.getProperty("hospitalName");
+                    patientHealthRecordDetails.setHospitalName(hospitalName);
+                    Set<String> setOfRecords = new HashSet<>();
+                    for (int i = 0; i < patientHealthRecord.size(); i++) {
+                        patientHealthRecord.get(i).setHospitalName(hospitalName);
+                        setOfRecords.add(patientHealthRecord.get(i).getRecordType());
+                        try {
+                            patientHealthRecord.get(i).setHospitalName(aesUtils.encrypt(hospitalName));
+                        }
+                        catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    String setOfRecordsAsString = String.join(",", setOfRecords);
+                    try {
+                        patientHealthRecordDetails.setListOfRecordType(aesUtils.encrypt(setOfRecordsAsString));
+                    }
+                    catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    patientHealthRecordDetailsRepository.save(patientHealthRecordDetails);
+                }
+        return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
         }
-    }
+
+
 
     @Override
     public ResponseEntity<PatientHealthRecord> addPatientHealthRecord(PatientHealthRecord patientHealthRecord) {
@@ -60,7 +87,8 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
             patientHealthRecord.setDescription(aesUtils.encrypt(patientHealthRecord.getDescription()));
             patientHealthRecord.setRecordType(aesUtils.encrypt(patientHealthRecord.getRecordType()));
             patientHealthRecord.setHospitalName(aesUtils.encrypt(patientHealthRecord.getHospitalName()));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         PatientHealthRecord patientRecordInput = patientHealthRecordRepository.save(patientHealthRecord);

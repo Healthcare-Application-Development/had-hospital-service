@@ -1,9 +1,9 @@
 package com.example.hadhospitalservice.controller;
 
 import com.example.hadhospitalservice.bean.PatientHealthRecord;
+import com.example.hadhospitalservice.bean.RequestPatientHealthRecord;
 import com.example.hadhospitalservice.bean.Response;
 import com.example.hadhospitalservice.interfaces.PatientHealthRecordInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +33,15 @@ public class PatientHealthRecordController {
 
     @PostMapping("/getPatientHealthRecordByAbhaId")
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaID(@RequestBody PatientHealthRecord patientHealthRecord) {
+        System.out.println(patientHealthRecord.getAbhaId());
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(patientHealthRecord.getAbhaId());
     }
 
 
-    @PostMapping("/getPatientHealthRecord")
-    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(@RequestBody PatientHealthRecord patientHealthRecord)  {
-        return patientHealthRecordInterface.getPatientHealthRecordByAbhaIdAndRecordType(patientHealthRecord.getAbhaId(), patientHealthRecord.getRecordType());
+    @PostMapping("/getPatientHealthRecord/")
+    public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(@RequestBody RequestPatientHealthRecord requestPatientHealthRecord)  {
+        return patientHealthRecordInterface.getPatientHealthRecordByAbhaIdAndRecordType(requestPatientHealthRecord);
     }
+
 
 }
