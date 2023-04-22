@@ -34,39 +34,49 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
     }
     @Override
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(RequestPatientHealthRecord requestPatientHealthRecord) {
-
-        List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(requestPatientHealthRecord.getAbhaId(),requestPatientHealthRecord.getRecordType());
-        if (patientHealthRecord == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            PatientHealthRecordDetails patientHealthRecordDetails= new PatientHealthRecordDetails();
-            patientHealthRecordDetails.setAbhaId(requestPatientHealthRecord.getAbhaId());
-            patientHealthRecordDetails.setArtifactId(requestPatientHealthRecord.getArtifactId());
-            patientHealthRecordDetails.setConsentId(requestPatientHealthRecord.getConsentId());
-            patientHealthRecordDetails.setRequestTimestamp(new Date());
-            String hospitalName = env.getProperty("hospitalName");
-            patientHealthRecordDetails.setHospitalName(hospitalName);
-            Set<String> setOfRecords = new HashSet<>();
-
-            for (int i = 0; i < patientHealthRecord.size(); i++) {
-                patientHealthRecord.get(i).setHospitalName(hospitalName);
-                setOfRecords.add(patientHealthRecord.get(i).getRecordType());
-                String hospitalName = env.getProperty("hospitalName");
+            List<PatientHealthRecord> patientHealthRecord = patientHealthRecordRepository.getPatientHealthRecordByAbhaIdAndRecordType(requestPatientHealthRecord.getAbhaId(), requestPatientHealthRecord.getRecordType());
+            if (patientHealthRecord == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                PatientHealthRecordDetails patientHealthRecordDetails = new PatientHealthRecordDetails();
                 try {
-                    patientHealthRecord.get(i).setHospitalName(aesUtils.encrypt(hospitalName));
-                } catch (Exception e) {
+                    patientHealthRecordDetails.setAbhaId(aesUtils.encrypt(requestPatientHealthRecord.getAbhaId()));
+                }
+                catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-            }
-            String setOfRecordsAsString = String.join(",", setOfRecords);
-            patientHealthRecordDetails.setListOfRecordType(setOfRecordsAsString);
-            PatientHealthRecordDetails patientRecordInput = patientHealthRecordDetailsRepository.save(patientHealthRecordDetails);
-
-            return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
-
+                    patientHealthRecordDetails.setArtifactId(requestPatientHealthRecord.getArtifactId());
+                    patientHealthRecordDetails.setConsentId(requestPatientHealthRecord.getConsentId());
+                    patientHealthRecordDetails.setRequestTimestamp(new Date());
+                    String hospitalName = env.getProperty("hospitalName");
+                    patientHealthRecordDetails.setHospitalName(hospitalName);
+                    Set<String> setOfRecords = new HashSet<>();
+                    for (int i = 0; i < patientHealthRecord.size(); i++) {
+                        patientHealthRecord.get(i).setHospitalName(hospitalName);
+                        setOfRecords.add(patientHealthRecord.get(i).getRecordType());
+                        try {
+                            patientHealthRecord.get(i).setHospitalName(aesUtils.encrypt(hospitalName));
+                        }
+                        catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    String setOfRecordsAsString = String.join(",", setOfRecords);
+                    try {
+                        patientHealthRecordDetails.setListOfRecordType(aesUtils.encrypt(setOfRecordsAsString));
+                    }
+                    catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    patientHealthRecordDetailsRepository.save(patientHealthRecordDetails);
+                }
+        return new ResponseEntity<List<PatientHealthRecord>>(patientHealthRecord, HttpStatus.OK);
         }
-    }
+
+
 
     @Override
     public ResponseEntity<PatientHealthRecord> addPatientHealthRecord(PatientHealthRecord patientHealthRecord) {
@@ -77,7 +87,8 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
             patientHealthRecord.setDescription(aesUtils.encrypt(patientHealthRecord.getDescription()));
             patientHealthRecord.setRecordType(aesUtils.encrypt(patientHealthRecord.getRecordType()));
             patientHealthRecord.setHospitalName(aesUtils.encrypt(patientHealthRecord.getHospitalName()));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         PatientHealthRecord patientRecordInput = patientHealthRecordRepository.save(patientHealthRecord);

@@ -33,6 +33,7 @@ public class PatientHealthRecordController {
 
     @PostMapping("/getPatientHealthRecordByAbhaId")
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaID(@RequestBody PatientHealthRecord patientHealthRecord) {
+        System.out.println(patientHealthRecord.getAbhaId());
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaId(patientHealthRecord.getAbhaId());
     }
 

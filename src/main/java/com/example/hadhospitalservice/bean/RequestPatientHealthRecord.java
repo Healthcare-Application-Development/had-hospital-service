@@ -5,23 +5,23 @@ import java.util.Date;
 public class RequestPatientHealthRecord {
 
 
-    public RequestPatientHealthRecord(Integer abhaId, String recordType, Integer consentId, Integer artifactId) {
+    public RequestPatientHealthRecord(String abhaId, String recordType, Integer consentId, Integer artifactId) {
         this.abhaId = abhaId;
         this.recordType = recordType;
         this.consentId = consentId;
         this.artifactId = artifactId;
     }
 
-    private Integer abhaId;
+    private String abhaId;
     private String recordType;
     private Integer consentId;
     private Integer artifactId;
 
-    public Integer getAbhaId() {
+    public String getAbhaId() {
         return abhaId;
     }
 
-    public void setAbhaId(Integer abhaId) {
+    public void setAbhaId(String abhaId) {
         this.abhaId = abhaId;
     }
 

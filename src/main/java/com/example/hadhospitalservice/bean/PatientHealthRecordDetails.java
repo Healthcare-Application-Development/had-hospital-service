@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 public class PatientHealthRecordDetails {
-    public PatientHealthRecordDetails(Integer abhaId,Integer artifactId,Integer consentId, String listOfRecordType, Date requestTimestamp, String hospitalName) {
+    public PatientHealthRecordDetails(String abhaId,Integer artifactId,Integer consentId, String listOfRecordType, Date requestTimestamp, String hospitalName) {
         this.abhaId = abhaId;
         this.artifactId=artifactId;
         this.consentId=consentId;
@@ -23,7 +23,7 @@ public class PatientHealthRecordDetails {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer abhaId;
+    private String abhaId;
     @Column(nullable = false)
     private Integer artifactId;
 
@@ -71,11 +71,11 @@ public class PatientHealthRecordDetails {
         this.listOfRecordType = listOfRecordType;
     }
 
-    public Integer getAbhaId() {
+    public String getAbhaId() {
         return abhaId;
     }
 
-    public void setAbhaId(Integer abhaId) {
+    public void setAbhaId(String abhaId) {
         this.abhaId = abhaId;
     }
 
