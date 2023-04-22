@@ -6,11 +6,12 @@ import java.util.Date;
 
 @Entity
 public class PatientHealthRecord {
-    public PatientHealthRecord(Integer abhaId, String recordType, Date timestamp, String hospitalName) {
+    public PatientHealthRecord(String abhaId, String recordType, Date timestamp, String hospitalName, String description) {
         this.abhaId = abhaId;
         this.recordType = recordType;
         this.timestamp=timestamp;
         this.hospitalName=hospitalName;
+        this.description=description;
     }
     public PatientHealthRecord(){}
 
@@ -19,7 +20,7 @@ public class PatientHealthRecord {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer abhaId;
+    private String abhaId;
 
     @Column(nullable = false)
     String recordType;
@@ -29,6 +30,9 @@ public class PatientHealthRecord {
 
     @Column(nullable = false)
     String hospitalName;
+    
+    @Column(nullable = false)
+    String description;
 
     public Date getTimestamp() {
         return timestamp;
@@ -39,11 +43,23 @@ public class PatientHealthRecord {
     }
 
 
-    public Integer getAbhaId() {
+    public String getAbhaId() {
         return abhaId;
     }
 
-    public void setAbhaId(Integer abhaId) {
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setAbhaId(String abhaId) {
         this.abhaId = abhaId;
     }
 

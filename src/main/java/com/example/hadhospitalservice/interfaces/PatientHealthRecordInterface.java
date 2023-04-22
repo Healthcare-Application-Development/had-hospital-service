@@ -9,6 +9,6 @@ public interface PatientHealthRecordInterface {
 
     ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(RequestPatientHealthRecord requestPatientHealthRecord);
     ResponseEntity<PatientHealthRecord> addPatientHealthRecord(PatientHealthRecord patientHealthRecord);
-    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaId(Integer abhaId);
+    ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaId(String abhaId);
     Response getAllPatientHealthRecord();
 }

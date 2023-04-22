@@ -3,6 +3,7 @@ package com.example.hadhospitalservice.controller;
 import com.example.hadhospitalservice.bean.AuthenticationResponse;
 import com.example.hadhospitalservice.bean.Login;
 import com.example.hadhospitalservice.bean.Response;
+import com.example.hadhospitalservice.encryption.AESUtils;
 import com.example.hadhospitalservice.repository.LoginRepository;
 import com.example.hadhospitalservice.security.MyUserDetailsServiceImpl;
 import com.example.hadhospitalservice.security.TokenManager;
@@ -35,11 +36,15 @@ public class AuthController {
     @Autowired
     LoginRepository loginRepository;
 
+    @Autowired
+    AESUtils aesUtils;
+
     @PostMapping("/authenticate")
-    public ResponseEntity<Response> authenticate(@RequestBody Login login) throws JsonProcessingException {
+    public ResponseEntity<Response> authenticate(@RequestBody Login login) throws Exception {
+        String password = aesUtils.decrypt(login.getPassword());
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    login.getUsername(), login.getPassword()));
+                    login.getUsername(), password));
         } catch (final BadCredentialsException ex) {
             System.out.println(ex.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
