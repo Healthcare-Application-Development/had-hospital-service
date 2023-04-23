@@ -83,9 +83,9 @@ public class PatientHealthRecordService implements PatientHealthRecordInterface 
         String hospitalName = env.getProperty("hospitalName");
         patientHealthRecord.setHospitalName(hospitalName);
         try {
-            patientHealthRecord.setAbhaId(aesUtils.encrypt(patientHealthRecord.getAbhaId()));
-            patientHealthRecord.setDescription(aesUtils.encrypt(patientHealthRecord.getDescription()));
-            patientHealthRecord.setRecordType(aesUtils.encrypt(patientHealthRecord.getRecordType()));
+            patientHealthRecord.setAbhaId(patientHealthRecord.getAbhaId());
+            patientHealthRecord.setDescription(patientHealthRecord.getDescription());
+            patientHealthRecord.setRecordType(patientHealthRecord.getRecordType());
             patientHealthRecord.setHospitalName(aesUtils.encrypt(patientHealthRecord.getHospitalName()));
         }
         catch (Exception e) {
