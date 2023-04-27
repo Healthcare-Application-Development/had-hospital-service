@@ -38,7 +38,7 @@ public class PatientHealthRecordController {
     }
 
 
-    @PostMapping("/getPatientHealthRecord/")
+    @PostMapping("/getPatientHealthRecord")
     public ResponseEntity<List<PatientHealthRecord>> getPatientHealthRecordByAbhaIdAndRecordType(@RequestBody RequestPatientHealthRecord requestPatientHealthRecord)  {
         return patientHealthRecordInterface.getPatientHealthRecordByAbhaIdAndRecordType(requestPatientHealthRecord);
     }

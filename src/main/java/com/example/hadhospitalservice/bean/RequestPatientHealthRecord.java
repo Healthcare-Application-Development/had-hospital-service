@@ -5,7 +5,7 @@ import java.util.Date;
 public class RequestPatientHealthRecord {
 
 
-    public RequestPatientHealthRecord(String abhaId, String recordType, Integer consentId, Integer artifactId) {
+    public RequestPatientHealthRecord(String abhaId, String recordType, String consentId, String artifactId) {
         this.abhaId = abhaId;
         this.recordType = recordType;
         this.consentId = consentId;
@@ -14,8 +14,8 @@ public class RequestPatientHealthRecord {
 
     private String abhaId;
     private String recordType;
-    private Integer consentId;
-    private Integer artifactId;
+    private String consentId;
+    private String artifactId;
 
     public String getAbhaId() {
         return abhaId;
@@ -33,19 +33,19 @@ public class RequestPatientHealthRecord {
         this.recordType = recordType;
     }
 
-    public Integer getConsentId() {
+    public String getConsentId() {
         return consentId;
     }
 
-    public void setConsentId(Integer consentId) {
+    public void setConsentId(String consentId) {
         this.consentId = consentId;
     }
 
-    public Integer getArtifactId() {
+    public String getArtifactId() {
         return artifactId;
     }
 
-    public void setArtifactId(Integer artifactId) {
+    public void setArtifactId(String artifactId) {
         this.artifactId = artifactId;
     }
 }
